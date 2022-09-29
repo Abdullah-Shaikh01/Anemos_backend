@@ -1,6 +1,6 @@
 const express = require('express')
 const operator = require('./routes/operator')
-
+const admin = require('./routes/admin')
 
 const app = express()
 app.use(express.json())
@@ -11,3 +11,4 @@ app.listen(PORT, () => {
 })
 
 app.use('/operator', operator)
+app.use('/admin', admin)

@@ -3,13 +3,18 @@ const nodemailer = require('nodemailer')
 
 
 module.exports = async function sendOTP(email, otp) {
+    //Uncomment this if authentication fails
+    // let testAccount = await nodemailer.createTestAccount();
+    // console.log(testAccount.user)
+    // console.log (testAccount.pass)
     let transporter = nodemailer.createTransport({
       host: "smtp.ethereal.email",
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: "mzhd6ujvmark344j@ethereal.email", // generated ethereal user
-        pass: "56kdW5TVXKmAzDyFYs", // generated ethereal password
+        user: "nnvyaduyijuxbld5@ethereal.email", // generated ethereal user
+        pass: "4W1fpGyr75W4vVvGxe", // generated ethereal password
+        
       },
     });
   

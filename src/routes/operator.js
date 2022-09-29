@@ -1,36 +1,36 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const {con, auth} = require('../config/dbconfig')
 const {encrypt, match} = require('../util/encrypt.js')
+const router = express.Router()
 const mailOTP = require('../util/mailOTP.js')
 const deleteOTP = require('../util/deleteOTP.js')
-const router = express.Router()
 
-router.post('/operator', (req, res) => {
+router.post('/login', (req, res) => {
 
-    const name = req.body.name
-    const password = req.body.password
-    const sql = `Select * from operator where name="${name}";`
+    const {email, password} = req.body
+    // const password = req.body.password
+    const sql = `Select * from operator where email="${email}";`
     con.query(sql, (err, result) => {
         if (err) throw( err)
         if(!result.length) {
-            res.status(404).json({message: "Username is incorrect"})
+            res.status(400).json({message: "Please try to login with correct credentials"})       
         } else if(match(password, result[0]['password'])) {
-            res.status(200).json({message: "Welcome " + result[0]["name"]})
+            //if the user is Admin
+            if(email === "admin@gmail.com") {
+                const data = {
+                    user: {
+                        email: email
+                    }
+                }
+                const token = jwt.sign(data, "qwertyuiop0987654321")
+                res.status(200).json({message: "Welcome " + result[0]["name"], token})
+            } else {
+                res.status(200).json({message: "Welcome " + result[0]["name"]})
+            }
         } else {
-            res.status(404).json({message: "Password is incorrect"})
+            res.status(404).json({message: "Please try to login with correct credentials"})
         }
-    })
-})
-
-router.post('/addOperator', (req, res) => {    
-    
-    const name = req.body.name
-    const email = req.body.email
-    const password = encrypt(req.body.password)
-    const sql = `insert into operator values ("${name}", "${email}" ,"${password}");`
-    con.query(sql, (err, result) => {
-        if (err) throw err;
-        res.status(200).json({message: `${result.affectedRows} operator addded`})
     })
 })
 
@@ -80,7 +80,7 @@ router.post('/verifyOTP', (req, res) => {
     con.query(sql, async function (err, result) {
         if (err) throw( err);
         if(!result.length) {
-            res.status(404).json({message: "Request for OTP"})
+            res.status(404).json({message: "Please first request for OTP"})
         }  else {
             if(result[0]["time"].getTime() + 300000 >=  new Date()) {     //300000 = 5 minutes* 60 seconds * 1000 milisecond
                 console.log("Not expired yet!")
