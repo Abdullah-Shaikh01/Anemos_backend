@@ -7,8 +7,11 @@ const mailOTP = require('../util/mailOTP.js')
 const deleteOTP = require('../util/deleteOTP.js')
 
 router.post('/login', (req, res) => {
-
+    console.log("Hello");
     const {email, password} = req.body
+    console.log(req.body);
+    console.log(email);
+    console.log(password);
     // const password = req.body.password
     const sql = `Select * from operator where email="${email}";`
     con.query(sql, (err, result) => {
