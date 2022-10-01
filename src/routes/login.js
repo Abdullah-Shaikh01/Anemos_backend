@@ -1,6 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const { con, auth } = require("../config/dbconfig");
+const { con } = require("../config/dbconfig");
 const { encrypt, match } = require("../util/encrypt.js");
 const refreshToken = require("../controllers/refreshToken");
 const router = express.Router();
