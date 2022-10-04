@@ -8,9 +8,9 @@ const router = express.Router();
 router.post("/", (req, res) => {
   // console.log("Hello");
   const { username, password } = req.body;
-  console.log(req.body);
-  console.log(username);
-  console.log(password);
+  // console.log(req.body);
+  // console.log(username);
+  // console.log(password);
   // const password = req.body.password
   const sql = `Select * from users where username="${username}";`;
   con.query(sql, (err, result) => {

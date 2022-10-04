@@ -34,7 +34,7 @@ router.post('/sendotp', async (req, res) => {
                              res.status(200).json({message: `${result.affectedRows} otp not addded but sent succesfully`})
                          }
                          res.status(200).json({message: `${result.affectedRows} otp addded and sent succesfully`})
-                     })
+                    })
                 })
             } else {
                 res.status(200).json({message: result})

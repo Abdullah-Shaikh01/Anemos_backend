@@ -9,7 +9,7 @@ router.post('/addOperator', verifyJWT, (req, res) => {
     
     const {name, email} = req.body
     const password = encrypt(req.body.password)
-    const sql = `insert into users values ("${name}", "${email}" ,"${password}");`
+    const sql = `insert into users values (UUID(), "${name}", "${email}" ,"${password}");`
     con.query(sql, (err, result) => {
         if (err) {
             console.log("Error while adding")
