@@ -12,7 +12,7 @@ router.post("/", (req, res) => {
   // console.log(username);
   // console.log(password);
   // const password = req.body.password
-  const sql = `Select * from users where username="${username}";`;
+  const sql = `Select id, password from users where username="${username}";`;
   con.query(sql, (err, result) => {
     if (err) throw err;
     if (!result.length) {
@@ -22,15 +22,15 @@ router.post("/", (req, res) => {
     } else if (match(password, result[0]["password"])) {
       //create JWTs
       const accessToken = jwt.sign(
-        { username: username },
+        { id: result[0]['id'] },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "30s" }
-      );
+      )
       const refreshToken = jwt.sign(
         { username: username },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "1d" }
-      );
+      )
 
       //Save refresh token in db
       //if token already present then update
@@ -52,12 +52,12 @@ router.post("/", (req, res) => {
                   message: `${result.affectedRows} Refresh token not update in DB`,
                 });
             }
-            //save token as cookie
-            // res.cookie("jwt", refreshToken, {
-            //   httpOnly: true,
-            //   sameSite: "None",
-            //   maxAge: 24 * 60 * 60 * 1000,
-            // }); //add {secure: true, } for chrome
+            // save token as cookie
+            res.cookie("jwt", refreshToken, {
+              httpOnly: true,
+              sameSite: "None",
+              maxAge: 24 * 60 * 60 * 1000,
+            }); //add {secure: true, } for chrome
             res
               .status(200)
               .json({ message: "welcome " + username, accessToken, refreshToken });
